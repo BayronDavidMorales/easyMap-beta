@@ -1,0 +1,191 @@
+
+<script>
+    var eventsHandler;
+        eventsHandler = {
+            haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel']
+            , init: function (options) {
+                var instance = options.instance
+                    , initialScale = 1
+                    , pannedX = 0
+                    , pannedY = 0
+
+                // Init Hammer
+                // Listen only for pointer and touch events
+                this.hammer = Hammer(options.svgElement, {
+                    inputClass: Hammer.SUPPORT_POINTER_EVENTS ? Hammer.PointerEventInput : Hammer.TouchInput
+                })
+
+                // Enable pinch
+                this.hammer.get('pinch').set({ enable: true })
+
+                // Handle double tap
+                this.hammer.on('doubletap', function (ev) {
+                    instance.zoomIn()
+                })
+
+                // Handle pan
+                this.hammer.on('panstart panmove', function (ev) {
+                    // On pan start reset panned variables
+                    if (ev.type === 'panstart') {
+                        pannedX = 0
+                        pannedY = 0
+                    }
+
+                    // Pan only the difference
+                    instance.panBy({ x: ev.deltaX - pannedX, y: ev.deltaY - pannedY })
+                    pannedX = ev.deltaX
+                    pannedY = ev.deltaY
+                })
+
+                // Handle pinch
+                this.hammer.on('pinchstart pinchmove', function (ev) {
+                    // On pinch start remember initial zoom
+                    if (ev.type === 'pinchstart') {
+                        initialScale = instance.getZoom()
+                        instance.zoomAtPoint(initialScale * ev.scale, { x: ev.center.x, y: ev.center.y })
+                    }
+
+                    instance.zoomAtPoint(initialScale * ev.scale, { x: ev.center.x, y: ev.center.y })
+                })
+
+                // Prevent moving the page on some devices when panning over SVG
+                options.svgElement.addEventListener('touchmove', function (e) { e.preventDefault(); });
+            }
+
+            , destroy: function () {
+                this.hammer.destroy()
+            }
+        }
+
+        // Expose to window namespace for testing purposes
+        window.panZoom = svgPanZoom('#mobile-svg', {
+            zoomEnabled: true
+            , controlIconsEnabled: true
+            , fit: 1
+            , center: 1
+            , customEventsHandler: eventsHandler
+        });
+</script>
+
+<script type="module">
+    import data from '/database/places.js'
+        let indexImages = 1;
+        var infoG = 'holi'
+        let cerrar = document.querySelectorAll('.close')[0];
+        let modal = document.querySelectorAll('.modal')[0];
+        let modalC = document.querySelectorAll('.modal-container')[0];
+        // botones imagenes
+        let left = document.querySelectorAll('#left')[0];
+        let right = document.querySelectorAll('#right')[0];
+
+
+
+        document.querySelectorAll('.bc').forEach(item => {
+            // let place= this.getAttribute("name");
+            item.onmouseover = function () { mouseOver(this.getAttribute("name")) };
+            item.onmouseout = function () { mouseOut(this.getAttribute("name")) };
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                let info = selcetData(this.getAttribute('name'));
+                infoG = info;
+                abrir(info);
+                document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + info.id + '/1.jpg")').trim();
+                document.querySelectorAll('.external-link')[0].href = info.externalLink;
+                document.querySelectorAll('.how-to-get')[0].href = info.howToGet;
+            });
+        })
+
+        function selcetData(name) {
+            // console.log(code);
+            let selectData;
+            switch (name) {
+                case 'mina':
+                    selectData = data.mina;
+                    // console.log(selectData);
+                    break;
+                case 'hospital':
+                    selectData = data.hospital;
+                    // console.log(selectData);
+                    break;
+                default:
+                    selectData = data.hospital;
+                    console.log('name: ', name);
+                    console.log(selectData);
+            }
+            return selectData;
+        }
+
+        function mouseOver(name) {
+            document.getElementById(name).style.fill = "#F27405";
+            // modalC.style.opacity = 1;
+            // modalC.style.visibility = 'visible';
+            // modal.classList.toggle('modal-close');
+        }
+
+        function mouseOut(name) {
+            document.getElementById(name).style.fill = "#909090";
+            // modal.classList.toggle('modal-close');
+            // setTimeout(function () {
+            //     modalC.style.opacity = 0;
+            //     modalC.style.visibility = 'hidden';
+            // }, 100);
+        }
+
+        function abrir(info) {
+            modalC.style.opacity = 1;
+            modalC.style.visibility = 'visible';
+            modal.classList.toggle('modal-close');
+            document.getElementById("placeName").innerHTML = info.name;
+            document.getElementById("placeDescription").innerHTML = info.description;
+        }
+
+        left.addEventListener('click', function (e) {
+            if (indexImages >= infoG.n) {
+                indexImages = 1;
+                // document.getElementById("placeImages").src = ('database/placeImages/' + infoG.id + '/' + indexImages + '.jpg').trim();
+                document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + infoG.id + '/' + indexImages + '.jpg")').trim();
+
+
+            } else {
+                indexImages++;
+                // document.getElementById("placeImages").src = ('database/placeImages/' + infoG.id + '/' + indexImages + '.jpg').trim();
+                document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + infoG.id + '/' + indexImages + '.jpg")').trim();
+
+            }
+        });
+        right.addEventListener('click', function (e) {
+            if (indexImages <= 1) {
+                indexImages = infoG.n;
+                document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + infoG.id + '/' + indexImages + '.jpg")').trim();
+                // document.getElementById("placeImages").src = ('database/placeImages/' + infoG.id + '/' + indexImages + '.jpg').trim();
+            } else {
+                indexImages--;
+                document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + infoG.id + '/' + indexImages + '.jpg")').trim();
+
+                // document.getElementById("placeImages").src = ('database/placeImages/' + infoG.id + '/' + indexImages + '.jpg').trim();
+            }
+        });
+
+        cerrar.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.classList.toggle('modal-close');
+            setTimeout(function () {
+                modalC.style.opacity = 0;
+                modalC.style.visibility = 'hidden';
+            }, 100);
+        });
+
+        window.addEventListener('click', function (e) {
+            // console.log(e.target);
+            if (e.target == modalC) {
+                modal.classList.toggle('modal-close');
+                setTimeout(function () {
+                    modalC.style.opacity = 0;
+                    modalC.style.visibility = 'hidden';
+                }, 300);
+            }
+        })
+
+</script>
+
+<script src="https://kit.fontawesome.com/6f1bc8fc38.js" crossorigin="anonymous"></script>

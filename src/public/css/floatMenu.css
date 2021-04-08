@@ -1,0 +1,90 @@
+.menu{
+    color: #fff;
+    position: relative;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 90px;
+    width: 45px;
+    background-color: #04B2D9;
+    text-align: center;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow:  inset 0px -1px 50px #03588C,
+                0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11),
+                0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11),
+                0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
+
+}
+.hamburger i{
+    transform: rotate(0deg);
+    transition: 0.1s ease-in-out;
+
+}
+#btn-menu{
+    width: 100%;
+    display: none;
+}
+.nav-menu{
+    opacity: 0;
+    height: 0;
+    transition: 0.5s ease-in-out;
+    -webkit-transition: 0.5s ease-in-out;
+}
+.nav-menu ul{
+    list-style: none;
+    padding: 0;
+}
+.nav-menu ul li{
+    padding: 10px 0px;
+    transition: all 0.1s ease;
+    border-top: .1px solid #04B2D9;
+}
+.menu label i{
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transform: rotate(0deg);
+    transition: all 0.2s ease;
+}
+.nav-menu a{
+    color:#fff;
+    margin-top: 20px;
+}
+
+.hamburger i:hover{
+    
+    cursor: pointer;
+    font-size: 30px;
+    background-color: #F29F05;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow:  inset 0px -10px 50px #F27405,
+                0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11),
+                0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11),
+                0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
+}
+.menu li:hover{
+    font-size: 26px;
+    background-color: #F29F05;
+    box-shadow:  inset 0px -1px 50px #F27405,
+                0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11),
+                0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11),
+                0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
+}
+.menu li:last-child:hover{
+    border-bottom-right-radius: 10px;
+}
+#btn-menu:checked ~.nav-menu{
+     opacity: 1;
+     height: auto;
+}
+#btn-menu:checked ~.hamburger i{
+    transform:rotate(180deg);
+    color: #fff;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 10px;
+
+}

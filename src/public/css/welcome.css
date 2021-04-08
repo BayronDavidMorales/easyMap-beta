@@ -1,0 +1,42 @@
+.background{
+    min-height: 100vh;
+    background-image: url(../img/backgroung.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;   
+    filter: blur(5px);    
+
+}
+.iniciar{
+    position: absolute;
+    width: 50%;
+    height: auto;
+    bottom: 30%;
+    left: 25%;
+    text-align: center;
+    box-sizing: border-box
+}
+
+.iniciar h2{
+    font-family: 'Expletus Sans';
+    font-size: 9vw;
+    margin-top: 3vw;
+    margin-bottom: 4vw;
+    color: #fff;
+}
+.iniciar a{
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Expletus Sans';
+    border: 3px solid #fff;
+    border-radius: 50px;
+    font-size: 3vw;
+    padding: 0 5vw;
+    
+    transition: text-decoration 0.8s, color 1s, font-weight 0.5s ease-in 0.1s;
+}
+.iniciar a:hover{
+    color: black;
+    background-color: #fff;
+}
