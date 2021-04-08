@@ -69,15 +69,19 @@
 
 <script type="module">
     import data from '/database/places.js'
+        let bandera=true;
         let indexImages = 1;
         var infoG = 'holi'
+        let ApiGoogle= 'https://www.google.com/maps/dir/';
+
         let cerrar = document.querySelectorAll('.close')[0];
         let modal = document.querySelectorAll('.modal')[0];
         let modalC = document.querySelectorAll('.modal-container')[0];
         // botones imagenes
         let left = document.querySelectorAll('#left')[0];
         let right = document.querySelectorAll('#right')[0];
-
+        // como llegar
+        let btnHowToGet= document.querySelectorAll('.how-to-get')[0];
 
 
         document.querySelectorAll('.bc').forEach(item => {
@@ -91,7 +95,7 @@
                 abrir(info);
                 document.getElementById("placeImages").style.backgroundImage = ('url("database/placeImages/' + info.id + '/1.jpg")').trim();
                 document.querySelectorAll('.external-link')[0].href = info.externalLink;
-                document.querySelectorAll('.how-to-get')[0].href = info.howToGet;
+                // document.querySelectorAll('.how-to-get')[0].href = info.howToGet;
             });
         })
 
@@ -138,6 +142,41 @@
             document.getElementById("placeName").innerHTML = info.name;
             document.getElementById("placeDescription").innerHTML = info.description;
         }
+
+        btnHowToGet.addEventListener('click',(e)=> {
+            // e.preventDefault();
+            
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(
+                    (geolocation) => {    //localizacion
+                        infoG.geolocation=`${geolocation.coords.latitude},${geolocation.coords.longitude}`;
+                        // console.log(infoG);
+                        let url=`${ApiGoogle}${infoG.geolocation}${infoG.howToGet}`;
+                        btnHowToGet.href= url;
+                        if(bandera){
+                            var win = window.open(url, '_blank');
+                            win.focus();
+                            bandera = !bandera;
+                        }
+                    },
+                    (err) => {
+                        alert("nessesary")
+                        console.log(err);
+                        btnHowToGet.style = {
+                            color: 'gray',
+                            // cursor: 'not-allowed',
+                            pointerEvents: 'none'
+                        }
+                    }, //denegado
+                    {  //opciones
+                        enableHighAccuracy: true,  //presicion
+                        timeout: 5000, //tiempo de espera de la geolocalizacion
+                        maximumAge: 1000 //cada cuanto se actualiza
+                    });
+            }else{
+                alert('Error geolocation');
+            }
+        });
 
         left.addEventListener('click', function (e) {
             if (indexImages >= infoG.n) {

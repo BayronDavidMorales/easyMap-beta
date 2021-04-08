@@ -1,9 +1,54 @@
 <div class="items header">
-    <div class="easy-map"><b>Easy map</b></div>
+    <div class="easy-map"><a href="/welcome"><b>Easy map</b></a></div>
     <div class="search">
         <div class="containerbar">
-            <input type="search" id="search" placeholder="Search..." required />
-            <div class="btn"><i class="fas fa-search-location icon"></i></div>
+            <input type="search" id="search" placeholder="Buscar"  list="listamodelos" autocomplete="off"/>
+            <div class="btn" id="btn-search"><i class="fas fa-search-location icon"></i></div>
         </div>
     </div>
 </div>
+<datalist id="listamodelos">
+    <option value="">
+</datalist>
+
+
+    <script type="module">
+        import data from '/database/places.js'
+        let temp= Object.values(data);
+        
+        const items = [
+            { name: "platanos", valor: 500 },
+            { name: "peras", valor: 500 },
+            { name: "manzanas", valor: 500 },
+            { name: "piñas", valor: 500 },
+            { name: "papa", valor: 500 },
+        ]
+        const search = document.querySelector('#search');
+        const btnSearch = document.querySelector('#btn-search');
+        const res = document.querySelector('#listamodelos');
+
+        const filter = () => {
+            res.innerHTML = '';
+            // console.log(search.value);
+            const txt = search.value.toLowerCase();
+            for (let item of temp) {
+                let name = item.name.toLowerCase();
+                if (name.indexOf(txt) !== -1) {
+                    res.innerHTML += `
+                             <option value="${item.name}">
+                        `
+                }
+            }
+            if (res == '') {
+                res.innerHTML += `
+                             <option value="...">
+                        ` 
+            }
+        }
+
+        btnSearch.addEventListener('click', filter);
+        search.addEventListener('keyup', filter);
+        filter();
+
+
+    </script>

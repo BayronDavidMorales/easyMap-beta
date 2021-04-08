@@ -4,10 +4,10 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    res.render('index.html', { });
+    res.redirect('/es/welcome');
 });
 
-router.get('/welcome', (req, res) => {
+router.get('/es/welcome', (req, res) => {
     res.render('welcome.html');
 });
 router.get('/es', (req, res) => {
